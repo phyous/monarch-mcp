@@ -1,0 +1,31 @@
+{
+  "name": "monarch-money-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for Monarch Money API - manage personal finances programmatically",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "inspector": "npx @modelcontextprotocol/inspector dist/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "monarch-money",
+    "personal-finance",
+    "budgeting",
+    "transactions"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "axios": "^1.7.9",
+    "zod": "^3.24.1",
+    "otplib": "^12.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  }
+}
