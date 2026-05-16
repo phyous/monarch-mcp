@@ -396,6 +396,10 @@ const tools: Tool[] = [
           type: 'boolean',
           description: 'Hide/show transaction in reports (optional)',
         },
+        needs_review: {
+          type: 'boolean',
+          description: 'Mark transaction as needing review (true) or reviewed (false) (optional)',
+        },
       },
       required: ['transaction_id'],
     },
@@ -795,6 +799,7 @@ async function handleToolCall(name: string, args: any): Promise<any> {
         categoryId: args.category_id,
         notes: args.notes,
         hideFromReports: args.hide_from_reports,
+        needsReview: args.needs_review,
       });
 
     case 'monarch_delete_transaction':
