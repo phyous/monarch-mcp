@@ -382,6 +382,7 @@ export class MonarchClient {
     notes?: string;
     hideFromReports?: boolean;
     needsReview?: boolean;
+    reviewStatus?: string;
   }) {
     this.ensureAuthenticated();
     // Monarch API expects id inside input, and uses 'category'/'name' field names
@@ -393,6 +394,7 @@ export class MonarchClient {
     if (input.notes !== undefined) monarchInput.notes = input.notes;
     if (input.hideFromReports !== undefined) monarchInput.hideFromReports = input.hideFromReports;
     if (input.needsReview !== undefined) monarchInput.needsReview = input.needsReview;
+    if (input.reviewStatus !== undefined) monarchInput.reviewStatus = input.reviewStatus;
     return this.graphqlRequest(MUTATIONS.UPDATE_TRANSACTION, { input: monarchInput });
   }
 
