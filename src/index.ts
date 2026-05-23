@@ -400,6 +400,11 @@ const tools: Tool[] = [
           type: 'boolean',
           description: 'Mark transaction as needing review (true) or reviewed (false) (optional)',
         },
+        review_status: {
+          type: 'string',
+          enum: ['reviewed', 'needs_review'],
+          description: 'Set review status directly: "reviewed" or "needs_review" (optional)',
+        },
       },
       required: ['transaction_id'],
     },
@@ -800,6 +805,7 @@ async function handleToolCall(name: string, args: any): Promise<any> {
         notes: args.notes,
         hideFromReports: args.hide_from_reports,
         needsReview: args.needs_review,
+        reviewStatus: args.review_status,
       });
 
     case 'monarch_delete_transaction':

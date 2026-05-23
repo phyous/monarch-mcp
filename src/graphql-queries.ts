@@ -493,6 +493,7 @@ export const MUTATIONS = {
           date
           hideFromReports
           needsReview
+          reviewStatus
           notes
           category {
             id
