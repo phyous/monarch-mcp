@@ -1138,17 +1138,22 @@ async function handleToolCall(name: string, args: any): Promise<any> {
 
     case 'monarch_create_transaction_rule': {
       await ensureAuthenticated();
-      const ruleInput: Record<string, any> = {};
-      if (args.merchant_criteria_operator || args.merchant_criteria_value) {
-        ruleInput.merchantCriteria = {};
-        if (args.merchant_criteria_operator) ruleInput.merchantCriteria.operator = args.merchant_criteria_operator;
-        if (args.merchant_criteria_value) ruleInput.merchantCriteria.value = args.merchant_criteria_value;
+      const ruleInput: Record<string, any> = {
+        applyToExistingTransactions: args.apply_to_existing || false,
+      };
+      if (args.merchant_criteria_operator && args.merchant_criteria_value) {
+        ruleInput.merchantNameCriteria = [{
+          operator: args.merchant_criteria_operator,
+          value: args.merchant_criteria_value,
+        }];
       }
-      if (args.amount_operator || args.amount_value !== undefined) {
-        ruleInput.amountCriteria = {};
-        if (args.amount_operator) ruleInput.amountCriteria.operator = args.amount_operator;
-        if (args.amount_value !== undefined) ruleInput.amountCriteria.value = args.amount_value;
-        if (args.amount_is_expense !== undefined) ruleInput.amountCriteria.isExpense = args.amount_is_expense;
+      if (args.amount_operator && args.amount_value !== undefined) {
+        ruleInput.amountCriteria = {
+          operator: args.amount_operator,
+          isExpense: args.amount_is_expense !== undefined ? args.amount_is_expense : true,
+          value: args.amount_value,
+          valueRange: null,
+        };
       }
       if (args.set_category_id) ruleInput.setCategoryAction = args.set_category_id;
       if (args.set_merchant_name) ruleInput.setMerchantAction = args.set_merchant_name;
@@ -1156,23 +1161,28 @@ async function handleToolCall(name: string, args: any): Promise<any> {
       if (args.hide_from_reports !== undefined) ruleInput.setHideFromReportsAction = args.hide_from_reports;
       if (args.review_status) ruleInput.reviewStatusAction = args.review_status;
       if (args.account_ids) ruleInput.accountIds = args.account_ids;
-      if (args.apply_to_existing !== undefined) ruleInput.applyToExisting = args.apply_to_existing;
       return await client.createTransactionRule(ruleInput);
     }
 
     case 'monarch_update_transaction_rule': {
       await ensureAuthenticated();
-      const updateRuleInput: Record<string, any> = { id: args.rule_id };
-      if (args.merchant_criteria_operator || args.merchant_criteria_value) {
-        updateRuleInput.merchantCriteria = {};
-        if (args.merchant_criteria_operator) updateRuleInput.merchantCriteria.operator = args.merchant_criteria_operator;
-        if (args.merchant_criteria_value) updateRuleInput.merchantCriteria.value = args.merchant_criteria_value;
+      const updateRuleInput: Record<string, any> = {
+        id: args.rule_id,
+        applyToExistingTransactions: args.apply_to_existing || false,
+      };
+      if (args.merchant_criteria_operator && args.merchant_criteria_value) {
+        updateRuleInput.merchantNameCriteria = [{
+          operator: args.merchant_criteria_operator,
+          value: args.merchant_criteria_value,
+        }];
       }
-      if (args.amount_operator || args.amount_value !== undefined) {
-        updateRuleInput.amountCriteria = {};
-        if (args.amount_operator) updateRuleInput.amountCriteria.operator = args.amount_operator;
-        if (args.amount_value !== undefined) updateRuleInput.amountCriteria.value = args.amount_value;
-        if (args.amount_is_expense !== undefined) updateRuleInput.amountCriteria.isExpense = args.amount_is_expense;
+      if (args.amount_operator && args.amount_value !== undefined) {
+        updateRuleInput.amountCriteria = {
+          operator: args.amount_operator,
+          isExpense: args.amount_is_expense !== undefined ? args.amount_is_expense : true,
+          value: args.amount_value,
+          valueRange: null,
+        };
       }
       if (args.set_category_id) updateRuleInput.setCategoryAction = args.set_category_id;
       if (args.set_merchant_name) updateRuleInput.setMerchantAction = args.set_merchant_name;
@@ -1180,7 +1190,6 @@ async function handleToolCall(name: string, args: any): Promise<any> {
       if (args.hide_from_reports !== undefined) updateRuleInput.setHideFromReportsAction = args.hide_from_reports;
       if (args.review_status) updateRuleInput.reviewStatusAction = args.review_status;
       if (args.account_ids) updateRuleInput.accountIds = args.account_ids;
-      if (args.apply_to_existing !== undefined) updateRuleInput.applyToExisting = args.apply_to_existing;
       return await client.updateTransactionRule(updateRuleInput);
     }
 

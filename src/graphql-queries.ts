@@ -442,14 +442,46 @@ export const QUERIES = {
       transactionRules {
         id
         order
-        merchantCriteria
-        merchantNameCriteria
-        amountCriteria
+        merchantCriteriaUseOriginalStatement
+        merchantCriteria {
+          operator
+          value
+        }
+        merchantNameCriteria {
+          operator
+          value
+        }
+        amountCriteria {
+          operator
+          isExpense
+          value
+          valueRange {
+            lower
+            upper
+          }
+        }
         categoryIds
         accountIds
-        setCategoryAction
-        setMerchantAction
-        addTagsAction
+        categories {
+          id
+          name
+        }
+        accounts {
+          id
+          displayName
+        }
+        setCategoryAction {
+          id
+          name
+        }
+        setMerchantAction {
+          id
+          name
+        }
+        addTagsAction {
+          id
+          name
+        }
         setHideFromReportsAction
         reviewStatusAction
         recentApplicationCount
@@ -715,22 +747,13 @@ export const MUTATIONS = {
   CREATE_TRANSACTION_RULE: `
     mutation Common_CreateTransactionRuleMutationV2($input: CreateTransactionRuleInput!) {
       createTransactionRuleV2(input: $input) {
-        transactionRule {
-          id
-          order
-          merchantCriteria
-          merchantNameCriteria
-          amountCriteria
-          categoryIds
-          accountIds
-          setCategoryAction
-          setMerchantAction
-          addTagsAction
-          setHideFromReportsAction
-          reviewStatusAction
-        }
         errors {
+          fieldErrors {
+            field
+            messages
+          }
           message
+          code
         }
       }
     }
@@ -739,22 +762,13 @@ export const MUTATIONS = {
   UPDATE_TRANSACTION_RULE: `
     mutation Common_UpdateTransactionRuleMutationV2($input: UpdateTransactionRuleInput!) {
       updateTransactionRuleV2(input: $input) {
-        transactionRule {
-          id
-          order
-          merchantCriteria
-          merchantNameCriteria
-          amountCriteria
-          categoryIds
-          accountIds
-          setCategoryAction
-          setMerchantAction
-          addTagsAction
-          setHideFromReportsAction
-          reviewStatusAction
-        }
         errors {
+          fieldErrors {
+            field
+            messages
+          }
           message
+          code
         }
       }
     }
