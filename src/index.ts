@@ -274,6 +274,15 @@ const tools: Tool[] = [
           type: 'string',
           description: 'Search term to filter transactions by merchant name or notes',
         },
+        needs_review: {
+          type: 'boolean',
+          description: 'Filter to only transactions needing review (optional)',
+        },
+        transaction_visibility: {
+          type: 'string',
+          enum: ['all_transactions', 'non_hidden_transactions_only'],
+          description: 'Transaction visibility filter. Use "all_transactions" to include investment transactions (buys, sells, dividends). Defaults to non-hidden only.',
+        },
       },
     },
   },
@@ -770,6 +779,8 @@ async function handleToolCall(name: string, args: any): Promise<any> {
         startDate: args.start_date,
         endDate: args.end_date,
         search: args.search,
+        needsReview: args.needs_review,
+        transactionVisibility: args.transaction_visibility,
       });
 
     case 'monarch_get_transaction_details':
