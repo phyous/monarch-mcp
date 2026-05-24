@@ -331,12 +331,16 @@ export class MonarchClient {
     startDate?: string;
     endDate?: string;
     search?: string;
+    needsReview?: boolean;
+    transactionVisibility?: string;
   } = {}) {
     this.ensureAuthenticated();
     const filters: Record<string, any> = {};
     if (options.startDate) filters.startDate = options.startDate;
     if (options.endDate) filters.endDate = options.endDate;
     if (options.search) filters.search = options.search;
+    if (options.needsReview !== undefined) filters.needsReview = options.needsReview;
+    if (options.transactionVisibility) filters.transactionVisibility = options.transactionVisibility;
     return this.graphqlRequest(QUERIES.GET_TRANSACTIONS, {
       offset: options.offset ?? 0,
       limit: options.limit ?? 100,
