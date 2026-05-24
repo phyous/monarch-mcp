@@ -333,6 +333,12 @@ export class MonarchClient {
     search?: string;
     needsReview?: boolean;
     transactionVisibility?: string;
+    accountIds?: string[];
+    categoryIds?: string[];
+    tagIds?: string[];
+    hasNotes?: boolean;
+    isSplit?: boolean;
+    isRecurring?: boolean;
   } = {}) {
     this.ensureAuthenticated();
     const filters: Record<string, any> = {};
@@ -341,6 +347,12 @@ export class MonarchClient {
     if (options.search) filters.search = options.search;
     if (options.needsReview !== undefined) filters.needsReview = options.needsReview;
     if (options.transactionVisibility) filters.transactionVisibility = options.transactionVisibility;
+    if (options.accountIds) filters.accountIds = options.accountIds;
+    if (options.categoryIds) filters.categoryIds = options.categoryIds;
+    if (options.tagIds) filters.tagIds = options.tagIds;
+    if (options.hasNotes !== undefined) filters.hasNotes = options.hasNotes;
+    if (options.isSplit !== undefined) filters.isSplit = options.isSplit;
+    if (options.isRecurring !== undefined) filters.isRecurring = options.isRecurring;
     return this.graphqlRequest(QUERIES.GET_TRANSACTIONS, {
       offset: options.offset ?? 0,
       limit: options.limit ?? 100,
@@ -516,5 +528,57 @@ export class MonarchClient {
   async getInstitutions() {
     this.ensureAuthenticated();
     return this.graphqlRequest(QUERIES.GET_INSTITUTIONS);
+  }
+
+  // =============================================================================
+  // TRANSACTION RULE METHODS
+  // =============================================================================
+
+  async getTransactionRules() {
+    this.ensureAuthenticated();
+    return this.graphqlRequest(QUERIES.GET_TRANSACTION_RULES);
+  }
+
+  async createTransactionRule(input: Record<string, any>) {
+    this.ensureAuthenticated();
+    return this.graphqlRequest(MUTATIONS.CREATE_TRANSACTION_RULE, { input });
+  }
+
+  async updateTransactionRule(input: Record<string, any>) {
+    this.ensureAuthenticated();
+    return this.graphqlRequest(MUTATIONS.UPDATE_TRANSACTION_RULE, { input });
+  }
+
+  async deleteTransactionRule(id: string) {
+    this.ensureAuthenticated();
+    return this.graphqlRequest(MUTATIONS.DELETE_TRANSACTION_RULE, { id });
+  }
+
+  // =============================================================================
+  // CATEGORY GROUP METHODS
+  // =============================================================================
+
+  async getCategoryGroups() {
+    this.ensureAuthenticated();
+    return this.graphqlRequest(QUERIES.GET_CATEGORY_GROUPS);
+  }
+
+  // =============================================================================
+  // NET WORTH METHODS
+  // =============================================================================
+
+  async getNetWorth(options: {
+    startDate?: string;
+    endDate?: string;
+    accountType?: string;
+  } = {}) {
+    this.ensureAuthenticated();
+    const filters: Record<string, any> = {};
+    if (options.startDate) filters.startDate = options.startDate;
+    if (options.endDate) filters.endDate = options.endDate;
+    if (options.accountType) filters.accountType = options.accountType;
+    return this.graphqlRequest(QUERIES.GET_NET_WORTH, {
+      filters: Object.keys(filters).length > 0 ? filters : undefined,
+    });
   }
 }

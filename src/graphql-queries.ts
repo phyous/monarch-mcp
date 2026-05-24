@@ -435,6 +435,56 @@ export const QUERIES = {
       }
     }
   `,
+
+  // Transaction rules
+  GET_TRANSACTION_RULES: `
+    query GetTransactionRules {
+      transactionRules {
+        id
+        order
+        merchantCriteria
+        merchantNameCriteria
+        amountCriteria
+        categoryIds
+        accountIds
+        setCategoryAction
+        setMerchantAction
+        addTagsAction
+        setHideFromReportsAction
+        reviewStatusAction
+        recentApplicationCount
+        lastAppliedAt
+      }
+    }
+  `,
+
+  // Category groups
+  GET_CATEGORY_GROUPS: `
+    query GetCategoryGroups {
+      categoryGroups {
+        id
+        name
+        type
+        order
+        categories {
+          id
+          name
+        }
+      }
+    }
+  `,
+
+  // Net worth (aggregate snapshots with account type filter)
+  GET_NET_WORTH: `
+    query Common_GetAggregateSnapshots($filters: AggregateSnapshotFilters) {
+      aggregateSnapshots(filters: $filters) {
+        date
+        balance
+        assetsBalance
+        liabilitiesBalance
+      }
+    }
+  `,
 };
 
 export const MUTATIONS = {
@@ -653,6 +703,66 @@ export const MUTATIONS = {
   DELETE_ACCOUNT: `
     mutation DeleteAccount($id: UUID!) {
       deleteAccount(id: $id) {
+        deleted
+        errors {
+          message
+        }
+      }
+    }
+  `,
+
+  // Transaction rule mutations
+  CREATE_TRANSACTION_RULE: `
+    mutation Common_CreateTransactionRuleMutationV2($input: CreateTransactionRuleInput!) {
+      createTransactionRuleV2(input: $input) {
+        transactionRule {
+          id
+          order
+          merchantCriteria
+          merchantNameCriteria
+          amountCriteria
+          categoryIds
+          accountIds
+          setCategoryAction
+          setMerchantAction
+          addTagsAction
+          setHideFromReportsAction
+          reviewStatusAction
+        }
+        errors {
+          message
+        }
+      }
+    }
+  `,
+
+  UPDATE_TRANSACTION_RULE: `
+    mutation Common_UpdateTransactionRuleMutationV2($input: UpdateTransactionRuleInput!) {
+      updateTransactionRuleV2(input: $input) {
+        transactionRule {
+          id
+          order
+          merchantCriteria
+          merchantNameCriteria
+          amountCriteria
+          categoryIds
+          accountIds
+          setCategoryAction
+          setMerchantAction
+          addTagsAction
+          setHideFromReportsAction
+          reviewStatusAction
+        }
+        errors {
+          message
+        }
+      }
+    }
+  `,
+
+  DELETE_TRANSACTION_RULE: `
+    mutation Common_DeleteTransactionRule($id: ID!) {
+      deleteTransactionRule(id: $id) {
         deleted
         errors {
           message

@@ -274,6 +274,33 @@ const tools: Tool[] = [
           type: 'string',
           description: 'Search term to filter transactions by merchant name or notes',
         },
+        account_ids: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Filter by account IDs (optional)',
+        },
+        category_ids: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Filter by category IDs (optional)',
+        },
+        tag_ids: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Filter by tag IDs (optional)',
+        },
+        has_notes: {
+          type: 'boolean',
+          description: 'Filter transactions with/without notes (optional)',
+        },
+        is_split: {
+          type: 'boolean',
+          description: 'Filter split transactions (optional)',
+        },
+        is_recurring: {
+          type: 'boolean',
+          description: 'Filter recurring transactions (optional)',
+        },
         needs_review: {
           type: 'boolean',
           description: 'Filter to only transactions needing review (optional)',
@@ -702,6 +729,209 @@ const tools: Tool[] = [
       properties: {},
     },
   },
+
+  // Transaction rule tools
+  {
+    name: 'monarch_get_transaction_rules',
+    description: 'Get all transaction rules (auto-categorization rules)',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+    },
+  },
+
+  {
+    name: 'monarch_create_transaction_rule',
+    description: 'Create a new transaction rule for auto-categorization',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        merchant_criteria_operator: {
+          type: 'string',
+          description: 'Operator for merchant matching (e.g., "contains", "equals")',
+        },
+        merchant_criteria_value: {
+          type: 'string',
+          description: 'Value to match merchants against',
+        },
+        amount_operator: {
+          type: 'string',
+          description: 'Operator for amount matching (e.g., "equal", "greater_than", "less_than")',
+        },
+        amount_value: {
+          type: 'number',
+          description: 'Amount value to match against',
+        },
+        amount_is_expense: {
+          type: 'boolean',
+          description: 'Whether the amount criteria applies to expenses',
+        },
+        set_category_id: {
+          type: 'string',
+          description: 'Category ID to set on matching transactions',
+        },
+        set_merchant_name: {
+          type: 'string',
+          description: 'Merchant name to set on matching transactions',
+        },
+        add_tag_ids: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Tag IDs to add to matching transactions',
+        },
+        hide_from_reports: {
+          type: 'boolean',
+          description: 'Whether to hide matching transactions from reports',
+        },
+        review_status: {
+          type: 'string',
+          description: 'Review status to set on matching transactions',
+        },
+        account_ids: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Account IDs to restrict the rule to',
+        },
+        apply_to_existing: {
+          type: 'boolean',
+          description: 'Whether to apply the rule to existing transactions',
+        },
+      },
+    },
+  },
+
+  {
+    name: 'monarch_update_transaction_rule',
+    description: 'Update an existing transaction rule',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        rule_id: {
+          type: 'string',
+          description: 'UUID of the rule to update',
+        },
+        merchant_criteria_operator: {
+          type: 'string',
+          description: 'Operator for merchant matching (e.g., "contains", "equals")',
+        },
+        merchant_criteria_value: {
+          type: 'string',
+          description: 'Value to match merchants against',
+        },
+        amount_operator: {
+          type: 'string',
+          description: 'Operator for amount matching (e.g., "equal", "greater_than", "less_than")',
+        },
+        amount_value: {
+          type: 'number',
+          description: 'Amount value to match against',
+        },
+        amount_is_expense: {
+          type: 'boolean',
+          description: 'Whether the amount criteria applies to expenses',
+        },
+        set_category_id: {
+          type: 'string',
+          description: 'Category ID to set on matching transactions',
+        },
+        set_merchant_name: {
+          type: 'string',
+          description: 'Merchant name to set on matching transactions',
+        },
+        add_tag_ids: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Tag IDs to add to matching transactions',
+        },
+        hide_from_reports: {
+          type: 'boolean',
+          description: 'Whether to hide matching transactions from reports',
+        },
+        review_status: {
+          type: 'string',
+          description: 'Review status to set on matching transactions',
+        },
+        account_ids: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Account IDs to restrict the rule to',
+        },
+        apply_to_existing: {
+          type: 'boolean',
+          description: 'Whether to apply the rule to existing transactions',
+        },
+      },
+      required: ['rule_id'],
+    },
+  },
+
+  {
+    name: 'monarch_delete_transaction_rule',
+    description: 'Delete a transaction rule',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        rule_id: {
+          type: 'string',
+          description: 'UUID of the rule to delete',
+        },
+      },
+      required: ['rule_id'],
+    },
+  },
+
+  // Additive tag tool
+  {
+    name: 'monarch_add_transaction_tag',
+    description: 'Add a tag to a transaction without removing existing tags (additive)',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        transaction_id: {
+          type: 'string',
+          description: 'UUID of the transaction',
+        },
+        tag_id: {
+          type: 'string',
+          description: 'UUID of the tag to add',
+        },
+      },
+      required: ['transaction_id', 'tag_id'],
+    },
+  },
+
+  // Category groups tool
+  {
+    name: 'monarch_get_category_groups',
+    description: 'Get all category groups with their categories',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+    },
+  },
+
+  // Net worth tool
+  {
+    name: 'monarch_get_net_worth',
+    description: 'Get net worth snapshots over a date range with optional account type filter. Returns daily balance, assets, and liabilities totals.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        start_date: {
+          type: 'string',
+          description: 'Start date in YYYY-MM-DD format (optional)',
+        },
+        end_date: {
+          type: 'string',
+          description: 'End date in YYYY-MM-DD format (optional)',
+        },
+        account_type: {
+          type: 'string',
+          description: 'Filter by account type (optional)',
+        },
+      },
+    },
+  },
 ];
 
 // =============================================================================
@@ -781,6 +1011,12 @@ async function handleToolCall(name: string, args: any): Promise<any> {
         search: args.search,
         needsReview: args.needs_review,
         transactionVisibility: args.transaction_visibility,
+        accountIds: args.account_ids,
+        categoryIds: args.category_ids,
+        tagIds: args.tag_ids,
+        hasNotes: args.has_notes,
+        isSplit: args.is_split,
+        isRecurring: args.is_recurring,
       });
 
     case 'monarch_get_transaction_details':
@@ -894,6 +1130,88 @@ async function handleToolCall(name: string, args: any): Promise<any> {
     case 'monarch_get_institutions':
       await ensureAuthenticated();
       return await client.getInstitutions();
+
+    // Transaction rules
+    case 'monarch_get_transaction_rules':
+      await ensureAuthenticated();
+      return await client.getTransactionRules();
+
+    case 'monarch_create_transaction_rule': {
+      await ensureAuthenticated();
+      const ruleInput: Record<string, any> = {};
+      if (args.merchant_criteria_operator || args.merchant_criteria_value) {
+        ruleInput.merchantCriteria = {};
+        if (args.merchant_criteria_operator) ruleInput.merchantCriteria.operator = args.merchant_criteria_operator;
+        if (args.merchant_criteria_value) ruleInput.merchantCriteria.value = args.merchant_criteria_value;
+      }
+      if (args.amount_operator || args.amount_value !== undefined) {
+        ruleInput.amountCriteria = {};
+        if (args.amount_operator) ruleInput.amountCriteria.operator = args.amount_operator;
+        if (args.amount_value !== undefined) ruleInput.amountCriteria.value = args.amount_value;
+        if (args.amount_is_expense !== undefined) ruleInput.amountCriteria.isExpense = args.amount_is_expense;
+      }
+      if (args.set_category_id) ruleInput.setCategoryAction = args.set_category_id;
+      if (args.set_merchant_name) ruleInput.setMerchantAction = args.set_merchant_name;
+      if (args.add_tag_ids) ruleInput.addTagsAction = args.add_tag_ids;
+      if (args.hide_from_reports !== undefined) ruleInput.setHideFromReportsAction = args.hide_from_reports;
+      if (args.review_status) ruleInput.reviewStatusAction = args.review_status;
+      if (args.account_ids) ruleInput.accountIds = args.account_ids;
+      if (args.apply_to_existing !== undefined) ruleInput.applyToExisting = args.apply_to_existing;
+      return await client.createTransactionRule(ruleInput);
+    }
+
+    case 'monarch_update_transaction_rule': {
+      await ensureAuthenticated();
+      const updateRuleInput: Record<string, any> = { id: args.rule_id };
+      if (args.merchant_criteria_operator || args.merchant_criteria_value) {
+        updateRuleInput.merchantCriteria = {};
+        if (args.merchant_criteria_operator) updateRuleInput.merchantCriteria.operator = args.merchant_criteria_operator;
+        if (args.merchant_criteria_value) updateRuleInput.merchantCriteria.value = args.merchant_criteria_value;
+      }
+      if (args.amount_operator || args.amount_value !== undefined) {
+        updateRuleInput.amountCriteria = {};
+        if (args.amount_operator) updateRuleInput.amountCriteria.operator = args.amount_operator;
+        if (args.amount_value !== undefined) updateRuleInput.amountCriteria.value = args.amount_value;
+        if (args.amount_is_expense !== undefined) updateRuleInput.amountCriteria.isExpense = args.amount_is_expense;
+      }
+      if (args.set_category_id) updateRuleInput.setCategoryAction = args.set_category_id;
+      if (args.set_merchant_name) updateRuleInput.setMerchantAction = args.set_merchant_name;
+      if (args.add_tag_ids) updateRuleInput.addTagsAction = args.add_tag_ids;
+      if (args.hide_from_reports !== undefined) updateRuleInput.setHideFromReportsAction = args.hide_from_reports;
+      if (args.review_status) updateRuleInput.reviewStatusAction = args.review_status;
+      if (args.account_ids) updateRuleInput.accountIds = args.account_ids;
+      if (args.apply_to_existing !== undefined) updateRuleInput.applyToExisting = args.apply_to_existing;
+      return await client.updateTransactionRule(updateRuleInput);
+    }
+
+    case 'monarch_delete_transaction_rule':
+      await ensureAuthenticated();
+      return await client.deleteTransactionRule(args.rule_id);
+
+    // Additive tag
+    case 'monarch_add_transaction_tag': {
+      await ensureAuthenticated();
+      const txDetails = await client.getTransactionDetails(args.transaction_id);
+      const existingTagIds: string[] = (txDetails.getTransaction?.tags || []).map((t: any) => t.id);
+      if (!existingTagIds.includes(args.tag_id)) {
+        existingTagIds.push(args.tag_id);
+      }
+      return await client.setTransactionTags(args.transaction_id, existingTagIds);
+    }
+
+    // Category groups
+    case 'monarch_get_category_groups':
+      await ensureAuthenticated();
+      return await client.getCategoryGroups();
+
+    // Net worth
+    case 'monarch_get_net_worth':
+      await ensureAuthenticated();
+      return await client.getNetWorth({
+        startDate: args.start_date,
+        endDate: args.end_date,
+        accountType: args.account_type,
+      });
 
     default:
       throw new Error(`Unknown tool: ${name}`);
