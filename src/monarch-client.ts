@@ -520,6 +520,24 @@ export class MonarchClient {
     return this.graphqlRequest(QUERIES.GET_RECURRING_TRANSACTIONS, { startDate, endDate });
   }
 
+  // Mark a recurring stream as NOT recurring — removes it from the recurring /
+  // subscriptions list (the web app's "This isn't recurring" action). Use this
+  // to prune stale subscriptions the user no longer pays for.
+  async markStreamNotRecurring(streamId: string) {
+    this.ensureAuthenticated();
+    return this.graphqlRequest(MUTATIONS.MARK_STREAM_NOT_RECURRING, { streamId });
+  }
+
+  // Review a recurring stream. reviewStatus is typically one of the Monarch
+  // enum values (e.g. "REVIEWED", "IGNORED"). Setting IGNORED stops a stream
+  // from surfacing without deleting it.
+  async reviewStream(streamId: string, reviewStatus: string) {
+    this.ensureAuthenticated();
+    return this.graphqlRequest(MUTATIONS.REVIEW_STREAM, {
+      input: { streamId, reviewStatus },
+    });
+  }
+
   async getSubscriptionDetails() {
     this.ensureAuthenticated();
     return this.graphqlRequest(QUERIES.GET_SUBSCRIPTION_DETAILS);
