@@ -796,4 +796,38 @@ export const MUTATIONS = {
       }
     }
   `,
+
+  // Mark a recurring stream as NOT recurring (removes it from the recurring /
+  // subscriptions list). This is the exact mutation the Monarch web app fires
+  // from the merchant drawer's "This isn't recurring" action.
+  MARK_STREAM_NOT_RECURRING: `
+    mutation Common_MarkAsNotRecurring($streamId: ID!) {
+      markStreamAsNotRecurring(streamId: $streamId) {
+        success
+        errors {
+          fieldErrors { field messages }
+          message
+          code
+        }
+      }
+    }
+  `,
+
+  // Review a recurring stream (e.g. mark it reviewed, or set reviewStatus to
+  // IGNORED so it stops surfacing). Mirrors the web app's Web_ReviewStream.
+  REVIEW_STREAM: `
+    mutation Common_ReviewStream($input: ReviewRecurringStreamInput!) {
+      reviewRecurringStream(input: $input) {
+        stream {
+          id
+          reviewStatus
+        }
+        errors {
+          fieldErrors { field messages }
+          message
+          code
+        }
+      }
+    }
+  `,
 };

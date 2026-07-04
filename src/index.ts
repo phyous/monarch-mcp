@@ -713,6 +713,40 @@ const tools: Tool[] = [
   },
 
   {
+    name: 'monarch_mark_stream_not_recurring',
+    description: 'Mark a recurring stream as NOT recurring, removing it from the recurring/subscriptions list. Use to prune stale subscriptions the user no longer pays for. Pass the stream id (from monarch_get_recurring_transactions results[].stream.id). This is the exact action the Monarch web app fires from the merchant drawer.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        stream_id: {
+          type: 'string',
+          description: 'UUID of the recurring stream to mark as not recurring',
+        },
+      },
+      required: ['stream_id'],
+    },
+  },
+
+  {
+    name: 'monarch_review_stream',
+    description: 'Review a recurring stream — set its reviewStatus (e.g. "REVIEWED" to acknowledge it, or "IGNORED" to stop it surfacing without deleting). Pass the stream id and the desired review status.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        stream_id: {
+          type: 'string',
+          description: 'UUID of the recurring stream to review',
+        },
+        review_status: {
+          type: 'string',
+          description: 'Review status to set, e.g. "REVIEWED" or "IGNORED"',
+        },
+      },
+      required: ['stream_id', 'review_status'],
+    },
+  },
+
+  {
     name: 'monarch_get_subscription',
     description: 'Get Monarch Money subscription details (premium status, payment source, trial info)',
     inputSchema: {
@@ -1122,6 +1156,14 @@ async function handleToolCall(name: string, args: any): Promise<any> {
     case 'monarch_get_recurring_transactions':
       await ensureAuthenticated();
       return await client.getRecurringTransactions();
+
+    case 'monarch_mark_stream_not_recurring':
+      await ensureAuthenticated();
+      return await client.markStreamNotRecurring(args.stream_id);
+
+    case 'monarch_review_stream':
+      await ensureAuthenticated();
+      return await client.reviewStream(args.stream_id, args.review_status);
 
     case 'monarch_get_subscription':
       await ensureAuthenticated();
